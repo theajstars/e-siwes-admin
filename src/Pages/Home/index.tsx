@@ -30,6 +30,7 @@ export default function Home() {
         route: Endpoints.ValidateAdminToken,
       }).then((res: ValidateAdminResponse) => {
         const { auth } = res.data;
+        console.log(res.data);
         if (!auth) {
           navigate("/login");
         }

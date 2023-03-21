@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { Text, Input, Button } from "@chakra-ui/react";
 import Logo from "../../Assets/IMG/Logo.png";
@@ -23,28 +23,27 @@ export const Login = () => {
   });
 
   const loginAdmin = async (e: any) => {
-    e.preventDefault();
-    const response: LoginResponse = await FetchData({
-      route: Endpoints.AdminLogin,
-      type: "POST",
-      data: Form,
-    });
-
-    console.log(response);
-    if (response.data.auth) {
-      Cookies.set("admin_token", response.data.data);
-      navigate("/home");
-    }
-    setFormSubmitting(true);
-    setTimeout(() => {
+    if (Form.email.length > 0 && Form.password.length > 0) {
+      e.preventDefault();
+      setFormSubmitting(true);
+      const response: LoginResponse = await FetchData({
+        route: Endpoints.AdminLogin,
+        type: "POST",
+        data: Form,
+      });
       setFormSubmitting(false);
-    }, 1300);
+      console.log(response);
+      if (response.data.auth) {
+        Cookies.set("admin_token", response.data.data);
+        window.location.href = "/home";
+      }
+    }
   };
   return (
     <div className="login-container flex-column">
       <img src={Logo} alt="" className="login-image" />
       <br />
-      <form action="#" onSubmit={loginAdmin}>
+      <form action="#" onSubmit={(e) => loginAdmin(e)}>
         <div className="login-form flex-column">
           <Text fontSize="2xl">Login</Text>
           <Input

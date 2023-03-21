@@ -33,28 +33,32 @@ export interface ValidateAdminResponse extends Omit<DefaultResponse, "data"> {
 }
 
 export interface Student {
+  _id: string;
+
+  __v: any;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone: string;
+  matricNumber: string;
+  supervisor: string;
   bankAccount: {
     name: string;
     number: string;
     sortCode: string;
+    masterListNumber: string;
   };
+  yearOfStudy: string;
+  courseOfStudy: string;
+  attachmentPeriod: string;
   company: {
     name: string;
     address: string;
   };
-  _id: string;
-  id: string;
-  firstName: string;
-  lastName: string;
-  matricNumber: string;
-  email: string;
-  password: string;
   isProfileComplete: boolean;
-  __v: any;
-  phone: string;
-  attachmentPeriod: string;
-  courseOfStudy: string;
-  yearOfStudy: string;
+  hasPaid: boolean;
 }
 
 export interface StudentResponse extends Omit<DefaultResponse, "data"> {
@@ -86,5 +90,14 @@ export interface SupervisorResponse extends Omit<DefaultResponse, "data"> {
     auth: boolean;
     data: Supervisor[] | [];
     message?: string;
+  };
+}
+
+export interface SingleSupervisorResponse
+  extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    data?: Supervisor;
+    message: string;
   };
 }

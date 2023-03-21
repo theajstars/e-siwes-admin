@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import { Login } from "./Pages/Login";
@@ -6,10 +6,12 @@ import Home from "./Pages/Home";
 import Supervisors from "./Pages/Supervisors";
 import Students from "./Pages/Students";
 import Profile from "./Pages/Profile";
+import Cookies from "js-cookie";
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />}>
           <Route path="/home/supervisors" element={<Supervisors />} />

@@ -9,5 +9,6 @@ enum Endpoints {
   GenerateStudentToken = "/admin/student/token/generate",
   GenerateSupervisorKey = "/admin/supervisor/key/generate",
   GetSupervisorProfiles = "/admin/supervisors",
+  GetSingleSupervisor = "/supervisor/profile/",
 }
 export { Endpoints };

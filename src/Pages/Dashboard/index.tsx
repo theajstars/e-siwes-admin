@@ -37,6 +37,7 @@ export default function Dashboard() {
       type: "GET",
       route: Endpoints.GetStudents,
     }).then((response: StudentResponse) => {
+      console.log(response);
       if (response.data.auth) {
         setStudents(response.data.data);
       }
