@@ -1,3 +1,12 @@
+@import url("./Login.css");
+@import url("./Colors.css");
+@import url("./Navbar.css");
+@import url("./Container.css");
+
+body {
+  margin: 0 auto;
+  padding: 0;
+}
 .flex-row {
   display: flex;
 }

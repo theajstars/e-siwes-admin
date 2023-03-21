@@ -1,4 +1,20 @@
 .login-container {
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  box-sizing: border-box;
+  background: url("../IMG/DashboardBackground.png");
+}
+.login-image {
+  width: 150px;
+}
+.login-form {
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--white-primary);
+  border-radius: 20px;
+  height: 350px;
+  width: 500px;
+  box-sizing: border-box;
+  padding: 30px;
 }

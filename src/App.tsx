@@ -1,13 +1,23 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
+import { Login } from "./Pages/Login";
+import Home from "./Pages/Home";
+import Supervisors from "./Pages/Supervisors";
+import Students from "./Pages/Students";
+import Profile from "./Pages/Profile";
 function App() {
   return (
-    <div className="App">
-      <h2>This is for the players</h2>
-      <Button colorScheme="teal" variant="solid">
-        Button
-      </Button>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />}>
+          <Route path="/home/supervisors" element={<Supervisors />} />
+          <Route path="/home/students" element={<Students />} />
+          <Route path="/home/profile" element={<Profile />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
