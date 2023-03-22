@@ -37,7 +37,6 @@ export default function Dashboard() {
       type: "GET",
       route: Endpoints.GetStudents,
     }).then((response: StudentResponse) => {
-      console.log(response);
       if (response.data.auth) {
         setStudents(response.data.data);
       }
@@ -49,7 +48,6 @@ export default function Dashboard() {
       route: Endpoints.GetSupervisorProfiles,
     }).then((response: SupervisorResponse) => {
       if (response.data.auth) {
-        console.log(response);
         setSupervisors(response.data.data);
       }
     });

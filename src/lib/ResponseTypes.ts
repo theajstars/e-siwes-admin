@@ -101,3 +101,10 @@ export interface SingleSupervisorResponse
     message: string;
   };
 }
+export interface SingleStudentResponse extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    data?: Student;
+    message: string;
+  };
+}
