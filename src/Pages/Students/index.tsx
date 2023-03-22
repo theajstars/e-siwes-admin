@@ -10,6 +10,7 @@ import {
   StudentResponse,
   Supervisor,
   SupervisorResponse,
+  DefaultResponse,
 } from "../../lib/ResponseTypes";
 
 import {
@@ -28,11 +29,18 @@ import {
   InputGroup,
   InputLeftAddon,
   Input,
+  StackDivider,
+  CardBody,
+  Heading,
+  Box,
+  Card,
+  useToast,
 } from "@chakra-ui/react";
 
-import Container from "../Container";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Students() {
+  const addToast = useToast();
   const [students, setStudents] = useState<Student[]>([]);
   const [temporaryStudents, setTemporaryStudents] = useState<Student[] | []>(
     []
@@ -46,6 +54,10 @@ export default function Students() {
   const [IsDataFetching, setIsDataFetching] = useState<boolean>(false);
 
   const [searchString, setSearchString] = useState<string>("");
+
+  const [studentToken, setStudentToken] = useState<string>("");
+  const [isStudentTokenGenerating, setStudentTokenGenerating] =
+    useState<boolean>(false);
 
   const getStudents = () => {
     setIsDataFetching(true);
@@ -126,12 +138,75 @@ export default function Students() {
       return null;
     }
   };
+
+  const generateStudentToken = () => {
+    setStudentTokenGenerating(true);
+    FetchData({
+      route: Endpoints.GenerateStudentToken,
+      type: "GET",
+    })
+      .then((response: DefaultResponse) => {
+        console.log(response);
+        if (response.data.auth) {
+          const token = response.data.data;
+          setStudentToken(token);
+        }
+        setStudentTokenGenerating(false);
+      })
+      .catch(() => {
+        setStudentTokenGenerating(false);
+      });
+  };
   return (
     <>
+      <br />
+      <Button colorScheme={"linkedin"} onClick={generateStudentToken}>
+        Generate Student Token &nbsp;{" "}
+        {isStudentTokenGenerating && (
+          <i className="far fa-spinner-third fa-spin" />
+        )}
+      </Button>
+      {studentToken.length > 0 && (
+        <Card width={"230px"} marginTop={2}>
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing="4">
+              <Box>
+                <Heading size="xs" textTransform="uppercase">
+                  Token
+                </Heading>
+                <Stack direction={"row"} alignItems="center">
+                  <Text pt="2" fontSize="sm">
+                    {studentToken.toUpperCase()}
+                  </Text>
+                  <CopyToClipboard
+                    onCopy={() =>
+                      addToast({
+                        description: "Copied!",
+                        status: "success",
+                      })
+                    }
+                    text={studentToken.toUpperCase()}
+                  >
+                    <Text
+                      pt="2"
+                      fontSize={"18px"}
+                      color={"blue.900"}
+                      cursor="pointer"
+                    >
+                      <i className="far fa-clipboard" />
+                    </Text>
+                  </CopyToClipboard>
+                </Stack>
+              </Box>
+            </Stack>
+          </CardBody>
+        </Card>
+      )}
       <br />
       <br />
       <Text size={"24px"}>Filter Table</Text>
       <br />
+      <StackDivider />
       <InputGroup>
         <InputLeftAddon children="Search" />
         <Input
