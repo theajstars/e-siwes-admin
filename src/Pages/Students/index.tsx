@@ -41,6 +41,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Students() {
   const addToast = useToast();
+  const navigate = useNavigate();
   const [students, setStudents] = useState<Student[]>([]);
   const [temporaryStudents, setTemporaryStudents] = useState<Student[] | []>(
     []
@@ -160,12 +161,25 @@ export default function Students() {
   return (
     <>
       <br />
-      <Button colorScheme={"linkedin"} onClick={generateStudentToken}>
-        Generate Student Token &nbsp;{" "}
-        {isStudentTokenGenerating && (
-          <i className="far fa-spinner-third fa-spin" />
-        )}
-      </Button>
+      <Stack direction={"row"} spacing={5}>
+        <Button
+          colorScheme={"linkedin"}
+          onClick={generateStudentToken}
+          width={"230px"}
+        >
+          Generate Student Token &nbsp;{" "}
+          {isStudentTokenGenerating && (
+            <i className="far fa-spinner-third fa-spin" />
+          )}
+        </Button>
+        <Button
+          width={"230px"}
+          colorScheme={"orange"}
+          onClick={() => navigate("/home/notification")}
+        >
+          Send Student Notification &nbsp;{" "}
+        </Button>
+      </Stack>
       {studentToken.length > 0 && (
         <Card width={"230px"} marginTop={2}>
           <CardBody>
@@ -175,7 +189,7 @@ export default function Students() {
                   Token
                 </Heading>
                 <Stack direction={"row"} alignItems="center">
-                  <Text pt="2" fontSize="sm">
+                  <Text pt="2" fontSize="sm" letterSpacing={1.2}>
                     {studentToken.toUpperCase()}
                   </Text>
                   <CopyToClipboard
@@ -211,6 +225,7 @@ export default function Students() {
         <InputLeftAddon children="Search" />
         <Input
           type="search"
+          value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
           placeholder="Find student by Name, Course, Matric Number"
           spellCheck={false}

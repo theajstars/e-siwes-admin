@@ -18,6 +18,7 @@ import Supervisors from "../Supervisors";
 
 import Dashboard from "../Dashboard";
 import Cookies from "js-cookie";
+import Notification from "../Notification";
 export default function Home() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -46,6 +47,7 @@ export default function Home() {
             <Route path="/supervisors" element={<Supervisors />} />
             <Route path="/students" element={<Students />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/notification" element={<Notification />} />
           </Route>
         </Routes>
       </Container>

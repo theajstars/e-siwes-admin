@@ -9,15 +9,15 @@ export default function Navbar() {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState<NavItems>("Home");
 
-  // useEffect(() => {
-  //   const pathname = location.pathname;
-  //   const lastIndex = pathname.lastIndexOf("/");
-  //   let path = pathname.substring(lastIndex, pathname.length).replace("/", "");
-  //   const remainingString = path.substring(1, path.length);
-  //   path = path[0].toUpperCase().concat(remainingString);
-  //   console.log(path);
-  //   setActiveItem(path);
-  // }, [location]);
+  useEffect(() => {
+    const pathname = location.pathname;
+    const lastIndex = pathname.lastIndexOf("/");
+    let path = pathname.substring(lastIndex, pathname.length).replace("/", "");
+    const remainingString = path.substring(1, path.length);
+    path = path[0].toUpperCase().concat(remainingString);
+    console.log(path);
+    setActiveItem(path);
+  }, [location]);
 
   return (
     <div className="nav-container flex-row">

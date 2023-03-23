@@ -7,6 +7,7 @@ import Supervisors from "./Pages/Supervisors";
 import Students from "./Pages/Students";
 import Profile from "./Pages/Profile";
 import Cookies from "js-cookie";
+import Notification from "./Pages/Notification";
 function App() {
   return (
     <Router>
@@ -17,6 +18,7 @@ function App() {
           <Route path="/home/supervisors" element={<Supervisors />} />
           <Route path="/home/students" element={<Students />} />
           <Route path="/home/profile" element={<Profile />} />
+          <Route path="/home/notification" element={<Notification />} />
         </Route>
       </Routes>
     </Router>

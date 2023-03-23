@@ -11,5 +11,6 @@ enum Endpoints {
   GenerateSupervisorKey = "/admin/supervisor/key/generate",
   GetSupervisorProfiles = "/admin/supervisors",
   GetSingleSupervisor = "/supervisor/profile/",
+  SendStudentNotification = "/admin/student/notification/send",
 }
 export { Endpoints };
