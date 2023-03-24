@@ -76,6 +76,7 @@ export interface Supervisor {
   isProfileComplete: boolean;
   lastName: string;
   password: string;
+  phone: string;
   students:
     | [
         {

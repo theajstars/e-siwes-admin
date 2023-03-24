@@ -32,6 +32,8 @@ export default function Notification() {
           title: "Notification sent!",
           status: "success",
         });
+        setNotificationTitle("");
+        setNotificationBody("");
       } else {
         addToast({
           title: "Notification could not be sent",

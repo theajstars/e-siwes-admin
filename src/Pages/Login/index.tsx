@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { Text, Input, Button } from "@chakra-ui/react";
+import { Text, Input, Button, useToast } from "@chakra-ui/react";
 import Logo from "../../Assets/IMG/Logo.png";
 import { AxiosResponse } from "axios";
 import { FetchData } from "../../lib/FetchData";
@@ -16,6 +16,7 @@ type LoginFormType = {
 };
 export const Login = () => {
   const navigate = useNavigate();
+  const addToast = useToast();
   const [isFormSubmitting, setFormSubmitting] = useState<boolean>(false);
   const [Form, SetForm] = useState<LoginFormType>({
     email: "",
@@ -36,6 +37,11 @@ export const Login = () => {
       if (response.data.auth) {
         Cookies.set("admin_token", response.data.data);
         window.location.href = "/home";
+      } else {
+        addToast({
+          title: "Invalid login details",
+          status: "error",
+        });
       }
     }
   };

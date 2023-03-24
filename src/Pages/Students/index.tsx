@@ -177,7 +177,7 @@ export default function Students() {
           colorScheme={"orange"}
           onClick={() => navigate("/home/notification")}
         >
-          Send Student Notification &nbsp;{" "}
+          Send Students Notification &nbsp;{" "}
         </Button>
       </Stack>
       {studentToken.length > 0 && (
@@ -325,7 +325,14 @@ export default function Students() {
                       </Td>
                       <Td>
                         {supervisor === null ? (
-                          <i>No Supervisor assigned</i>
+                          <Text
+                            backgroundColor={"linkedin.600"}
+                            color={"white"}
+                            padding={1}
+                            fontSize={15}
+                          >
+                            <i>No Supervisor assigned</i>
+                          </Text>
                         ) : (
                           supervisor
                         )}

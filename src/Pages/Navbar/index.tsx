@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+
 import { Link, useLocation } from "react-router-dom";
+
+import Cookies from "js-cookie";
 
 import Logo from "../../Assets/IMG/Logo.png";
 import Container from "../Container";
+import { Tag, TagLabel } from "@chakra-ui/react";
 
 type NavItems = "Home" | "Students" | "Supervisors" | "Profile" | string;
 export default function Navbar() {
@@ -18,6 +22,11 @@ export default function Navbar() {
     console.log(path);
     setActiveItem(path);
   }, [location]);
+
+  const logout = () => {
+    Cookies.remove("admin_token");
+    window.location.href = "/login";
+  };
 
   return (
     <div className="nav-container flex-row">
@@ -59,6 +68,16 @@ export default function Navbar() {
             >
               Profile
             </Link>
+            <Tag
+              size="lg"
+              variant={"subtle"}
+              colorScheme="twitter"
+              onClick={logout}
+              marginLeft={10}
+              cursor="pointer"
+            >
+              <TagLabel>Logout</TagLabel>
+            </Tag>
           </div>
         </nav>
       </Container>
