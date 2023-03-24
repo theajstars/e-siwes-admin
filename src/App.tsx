@@ -9,6 +9,7 @@ import Profile from "./Pages/Profile";
 import Cookies from "js-cookie";
 import Notification from "./Pages/Notification";
 import SingleSupervisor from "./Pages/SingleSupervisor";
+import SingleStudent from "./Pages/SingleStudent";
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
             element={<SingleSupervisor />}
           />
           <Route path="/home/students" element={<Students />} />
+          <Route path="/home/students/:studentID" element={<SingleStudent />} />
           <Route path="/home/profile" element={<Profile />} />
           <Route path="/home/notification" element={<Notification />} />
         </Route>

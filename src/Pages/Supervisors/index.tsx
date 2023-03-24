@@ -36,9 +36,11 @@ import {
   Card,
   useToast,
 } from "@chakra-ui/react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function Supervisors() {
   const navigate = useNavigate();
+  const addToast = useToast();
   const [supervisors, setSupervisors] = useState<Supervisor[]>([]);
   const [isSupervisorsFetching, setSupervisorsFetching] =
     useState<boolean>(false);
@@ -61,8 +63,80 @@ export default function Supervisors() {
     fetchSupervisors();
   }, []);
 
+  const [supervisorKey, setSupervisorKey] = useState<string>("");
+
+  const [isSupervisorKeyGenerating, setSupervisorKeyGenerating] =
+    useState<boolean>(false);
+
+  const generateSupervisorKey = async () => {
+    setSupervisorKeyGenerating(true);
+    const SUPERVISORKEYGENERATE: DefaultResponse = await FetchData({
+      type: "GET",
+      route: Endpoints.GenerateSupervisorKey,
+    });
+    setSupervisorKeyGenerating(false);
+    if (SUPERVISORKEYGENERATE.data.auth) {
+      setSupervisorKey(SUPERVISORKEYGENERATE.data.data);
+    } else {
+      addToast({
+        description: "Could not generate key",
+        status: "error",
+      });
+    }
+  };
+
   return (
     <>
+      <br />
+      <br />
+      <Stack direction={"row"} spacing={5}>
+        <Button
+          colorScheme={"linkedin"}
+          onClick={generateSupervisorKey}
+          width={"230px"}
+        >
+          Generate Supervisor Key &nbsp;{" "}
+          {isSupervisorKeyGenerating && (
+            <i className="far fa-spinner-third fa-spin" />
+          )}
+        </Button>
+      </Stack>
+      {supervisorKey.length > 0 && (
+        <Card width={"230px"} marginTop={2}>
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing="4">
+              <Box>
+                <Heading size="xs" textTransform="uppercase">
+                  Key
+                </Heading>
+                <Stack direction={"row"} alignItems="center">
+                  <Text pt="2" fontSize="sm" letterSpacing={1.2}>
+                    {supervisorKey.toUpperCase()}
+                  </Text>
+                  <CopyToClipboard
+                    onCopy={() =>
+                      addToast({
+                        description: "Copied!",
+                        status: "success",
+                      })
+                    }
+                    text={supervisorKey.toUpperCase()}
+                  >
+                    <Text
+                      pt="2"
+                      fontSize={"18px"}
+                      color={"blue.900"}
+                      cursor="pointer"
+                    >
+                      <i className="far fa-clipboard" />
+                    </Text>
+                  </CopyToClipboard>
+                </Stack>
+              </Box>
+            </Stack>
+          </CardBody>
+        </Card>
+      )}
       <br />
       <br />
       <Button

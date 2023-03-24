@@ -307,6 +307,7 @@ export default function Students() {
                       <Th>Address</Th>
                     </>
                   )}
+                  <Th>Action</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -354,6 +355,18 @@ export default function Students() {
                           <Td>{student.company.address}</Td>
                         </>
                       )}
+                      <Td>
+                        <Button
+                          onClick={() => {
+                            navigate(`/home/students/${student.id}`);
+                          }}
+                          colorScheme={"linkedin"}
+                          height={9}
+                          fontSize={15}
+                        >
+                          View Details
+                        </Button>
+                      </Td>
                     </Tr>
                   );
                 })}
