@@ -1,11 +1,20 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardHeader,
   Divider,
   Heading,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
   Select,
   Stack,
   StackDivider,
@@ -24,7 +33,7 @@ import {
   Tr,
   useToast,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -33,6 +42,7 @@ import {
   Student,
   StudentResponse,
   Supervisor,
+  SupervisorResponse,
 } from "../../lib/ResponseTypes";
 import { FetchData } from "../../lib/FetchData";
 import { Endpoints } from "../../lib/Endpoints";
@@ -50,7 +60,11 @@ export default function SingleSupervisor() {
 
   const [studentToAssign, setStudentToAssign] = useState<string>("");
   const [isStudentAssigning, setStudentAssigning] = useState<boolean>(false);
+  const [currentStudentSupervisor, setCurrentStudentSupervisor] =
+    useState<Supervisor>();
+  const [isConfirmReassign, setConfirmReassign] = useState<boolean>(false);
 
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
   const fetchSupervisor = async () => {
     const SUPERVISOR: SingleSupervisorResponse = await FetchData({
       type: "GET",
@@ -65,7 +79,6 @@ export default function SingleSupervisor() {
       type: "GET",
       route: Endpoints.GetStudents,
     });
-    console.log(STUDENTS);
     if (STUDENTS.data.auth) {
       setAllStudents(STUDENTS.data.data);
     }
@@ -88,28 +101,65 @@ export default function SingleSupervisor() {
     });
   }, []);
 
-  const AssignStudent = async () => {
+  const AssignStudent = async (forceAssign: boolean) => {
     if (studentToAssign === "") {
       addToast({
         title: "Please select a student!",
       });
     } else {
-      setStudentAssigning(true);
-      const assign: DefaultResponse = await FetchData({
-        type: "POST",
-        data: { supervisorID: params.supervisorID, studentID: studentToAssign },
-        route: Endpoints.AssignStudentToSupervisor,
-      });
-      setStudentAssigning(false);
-      if (assign.data.auth) {
-        addToast({
-          title: "Success!",
-          description: "Student assigned to supervisor",
-          status: "success",
+      const SuperAssign = () => {
+        setStudentAssigning(true);
+        FetchData({
+          type: "POST",
+          data: {
+            supervisorID: params.supervisorID,
+            studentID: studentToAssign,
+          },
+          route: Endpoints.AssignStudentToSupervisor,
+        }).then((assign: DefaultResponse) => {
+          setStudentToAssign("");
+          setConfirmReassign(false);
+          setStudentAssigning(false);
+          if (assign.data.auth) {
+            addToast({
+              title: "Success!",
+              description: "Student assigned to supervisor",
+              status: "success",
+            });
+            fetchAllStudents();
+            fetchSupervisor();
+            fetchSupervisorStudents();
+          }
         });
-        fetchAllStudents();
-        fetchSupervisor();
-        fetchSupervisorStudents();
+      };
+      if (!forceAssign) {
+        // Check if student is already assigned
+
+        const isStudentAlreadyAssigned = allStudents?.filter(
+          (stud) =>
+            stud.id === studentToAssign &&
+            stud.supervisor.length > 0 &&
+            stud.supervisor !== params.supervisorID
+        );
+
+        if (isStudentAlreadyAssigned && isStudentAlreadyAssigned?.length > 0) {
+          console.log(isStudentAlreadyAssigned);
+          setConfirmReassign(true);
+          FetchData({
+            type: "GET",
+            route: Endpoints.GetSingleSupervisor.concat(
+              isStudentAlreadyAssigned[0].supervisor
+            ),
+          }).then((supervisorResponse: SingleSupervisorResponse) => {
+            if (supervisorResponse.data.auth) {
+              setCurrentStudentSupervisor(supervisorResponse.data.data);
+            }
+          });
+        } else {
+          SuperAssign();
+        }
+      } else {
+        SuperAssign();
       }
     }
   };
@@ -201,7 +251,6 @@ export default function SingleSupervisor() {
                 placeholder="Assign student..."
                 value={studentToAssign}
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setStudentToAssign(e.target.value);
                 }}
               >
@@ -215,24 +264,73 @@ export default function SingleSupervisor() {
                     );
                   })}
               </Select>
-
-              <Button
-                colorScheme={"linkedin"}
-                height={9}
-                marginTop={3}
-                marginBottom={3}
-                onClick={AssignStudent}
-                disabled={isStudentAssigning}
+              <Popover
+                initialFocusRef={initialFocusRef}
+                placement="bottom"
+                closeOnBlur={false}
+                isOpen={isConfirmReassign}
               >
-                {!isStudentAssigning ? (
-                  <Text>Assign New Student</Text>
-                ) : (
-                  <Text>
-                    Loading &nbsp;{" "}
-                    <i className="far fa-spinner-third fa-spin" />
-                  </Text>
-                )}
-              </Button>
+                <PopoverTrigger>
+                  <Button
+                    colorScheme={"linkedin"}
+                    height={9}
+                    marginTop={3}
+                    marginBottom={3}
+                    onClick={() => AssignStudent(false)}
+                    disabled={isStudentAssigning}
+                  >
+                    {!isStudentAssigning ? (
+                      <Text>Assign New Student</Text>
+                    ) : (
+                      <Text>
+                        Loading &nbsp;{" "}
+                        <i className="far fa-spinner-third fa-spin" />
+                      </Text>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  color="white"
+                  bg="blue.800"
+                  borderColor="blue.800"
+                >
+                  <PopoverHeader pt={4} fontWeight="bold" border="0">
+                    Student Already Assigned
+                  </PopoverHeader>
+                  <PopoverArrow />
+                  <PopoverCloseButton
+                    onClick={() => setConfirmReassign(false)}
+                  />
+                  <PopoverBody>
+                    This student has already been assigned to:{" "}
+                    {currentStudentSupervisor?.firstName}{" "}
+                    {currentStudentSupervisor?.lastName}
+                  </PopoverBody>
+                  <PopoverFooter
+                    border="0"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    pb={4}
+                  >
+                    <ButtonGroup size="sm">
+                      <Button
+                        colorScheme="green"
+                        onClick={() => AssignStudent(true)}
+                      >
+                        Assign Anyway
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        ref={initialFocusRef}
+                        onClick={() => setConfirmReassign(false)}
+                      >
+                        Cancel
+                      </Button>
+                    </ButtonGroup>
+                  </PopoverFooter>
+                </PopoverContent>
+              </Popover>
             </Stat>
 
             <Divider />
