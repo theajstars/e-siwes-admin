@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Link } from "react-router-dom";
 import { Endpoints } from "../../lib/Endpoints";
 import { FetchData } from "../../lib/FetchData";
 import {
@@ -38,6 +38,7 @@ import {
 } from "@chakra-ui/react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { CSVLink } from "react-csv";
 
 export default function Students() {
   const addToast = useToast();
@@ -60,6 +61,25 @@ export default function Students() {
   const [isStudentTokenGenerating, setStudentTokenGenerating] =
     useState<boolean>(false);
 
+  const DataHeaders = [
+    { key: "MatricNumber", label: "Matric Number" },
+    { key: "FirstName", label: "First Name" },
+    { key: "LastName", label: "Last Name" },
+    { key: "Email", label: "Email" },
+    { key: "Phone", label: "Phone" },
+    { key: "PaymentStatus", label: "Payment Status" },
+    { key: "courseOfStudy", label: "Course of Study" },
+    { key: "Supervisor", label: "Supervisor" },
+    { key: "AttatchmentPeriod", label: "Attatchment Period" },
+    { key: "BankName", label: "Bank Name" },
+    { key: "BankNumber", label: "Bank Number" },
+    { key: "SortCode", label: "Sort Code" },
+    { key: "MasterListNumber", label: "Master List Number" },
+    { key: "CompanyName", label: "Company Name" },
+    { key: "CompanyAddress", label: "Company Address" },
+  ];
+  const [exportData, setExportData] = useState<any[]>([]);
+
   const getStudents = () => {
     setIsDataFetching(true);
     FetchData({
@@ -69,7 +89,32 @@ export default function Students() {
       .then((response: StudentResponse) => {
         setIsDataFetching(false);
         if (response.data.auth) {
+          console.log(response.data.data);
           setStudents(response.data.data);
+          const exportDatum = response.data.data.map((singleStudentObject) => {
+            let obj = {
+              AttatchmentPeriod: singleStudentObject.attachmentPeriod,
+              BankName: singleStudentObject.bankAccount.name,
+              BankNumber: singleStudentObject.bankAccount.number,
+              SortCode: singleStudentObject.bankAccount.sortCode,
+              MasterListNumber:
+                singleStudentObject.bankAccount.masterListNumber,
+              CompanyName: singleStudentObject.company.name,
+              CompanyAddress: singleStudentObject.company.address,
+              courseOfStudy: singleStudentObject.courseOfStudy,
+              Email: singleStudentObject.email,
+              FirstName: singleStudentObject.firstName,
+              PaymentStatus: singleStudentObject.hasPaid ? "Paid" : "Not Paid",
+              LastName: singleStudentObject.lastName,
+              MatricNumber: singleStudentObject.matricNumber,
+              Phone: singleStudentObject.phone,
+              Supervisor: getSupervisor(singleStudentObject.supervisor),
+            };
+            // setExportData((prevData) => [...prevData, obj]);
+            return obj;
+          });
+          console.log("Data to Export: ", exportDatum);
+          setExportData(exportDatum);
           setTemporaryStudents(response.data.data);
         }
       })
@@ -92,9 +137,7 @@ export default function Students() {
     FetchData({
       type: "GET",
       route: Endpoints.GetSingleStudent,
-    }).then((response: SingleStudentResponse) => {
-      // console.log(response);
-    });
+    }).then((response: SingleStudentResponse) => {});
   };
   useEffect(() => {
     // Get All Students
@@ -102,7 +145,6 @@ export default function Students() {
     getSupervisors();
   }, []);
   useEffect(() => {
-    console.log(searchString);
     let str = searchString;
     str = str.trim();
     str = str.toLowerCase();
@@ -112,7 +154,6 @@ export default function Students() {
         const { firstName, lastName, courseOfStudy, matricNumber } = student;
         const name = firstName.concat(" ").concat(lastName).toLowerCase();
         if (name.indexOf(str) !== -1) {
-          console.log("Found this: ", name, str);
           return true;
         } else if (courseOfStudy) {
           if (courseOfStudy.toLowerCase().indexOf(str) !== -1) {
@@ -147,7 +188,6 @@ export default function Students() {
       type: "GET",
     })
       .then((response: DefaultResponse) => {
-        console.log(response);
         if (response.data.auth) {
           const token = response.data.data;
           setStudentToken(token);
@@ -253,16 +293,25 @@ export default function Students() {
         </Checkbox>
       </Stack>
       <br />
-      <Button
-        colorScheme={"linkedin"}
-        width={200}
-        height={35}
-        disabled={IsDataFetching}
-        onClick={getStudents}
-      >
-        Refresh &nbsp;
-        {IsDataFetching && <i className="far fa-spinner-third fa-spin" />}
-      </Button>
+      <Stack direction={"row"} spacing={5}>
+        <Button
+          colorScheme={"linkedin"}
+          width={200}
+          height={35}
+          disabled={IsDataFetching}
+          onClick={getStudents}
+        >
+          Refresh &nbsp;
+          {IsDataFetching && <i className="far fa-spinner-third fa-spin" />}
+        </Button>
+        <CSVLink data={exportData} headers={DataHeaders}>
+          <Button colorScheme={"whatsapp"} width={200} height={35}>
+            <CSVLink data={exportData} headers={DataHeaders}>
+              Export to CSV &nbsp;<i className="far fa-cloud-download-alt"></i>
+            </CSVLink>
+          </Button>
+        </CSVLink>
+      </Stack>
       <br />
       <br />
       {IsStudentLoading && (
@@ -273,6 +322,7 @@ export default function Students() {
           </Text>
         </center>
       )}
+
       {students.length > 0 && !IsStudentLoading ? (
         <>
           <TableContainer
@@ -321,6 +371,7 @@ export default function Students() {
                       <Td>{student.lastName}</Td>
                       <Td>{student.email}</Td>
                       <Td>{student.phone}</Td>
+
                       <Td color={student.hasPaid ? "blue.600" : "red.500"}>
                         {student.hasPaid ? "Paid" : "Not Paid"}
                       </Td>
@@ -335,7 +386,17 @@ export default function Students() {
                             <i>No Supervisor assigned</i>
                           </Text>
                         ) : (
-                          supervisor
+                          <Link
+                            to={"/home/supervisors/".concat(student.supervisor)}
+                          >
+                            <Text
+                              textDecorationColor={"linkedin.500"}
+                              textDecoration="underline"
+                              color={"linkedin.500"}
+                            >
+                              {supervisor}
+                            </Text>
+                          </Link>
                         )}
                       </Td>
                       {viewBankDetails && (
@@ -346,6 +407,7 @@ export default function Students() {
                           <Td>{student.bankAccount.masterListNumber}</Td>
                         </>
                       )}
+
                       <Td>{student.yearOfStudy}</Td>
                       <Td>{student.courseOfStudy}</Td>
                       {viewInternshipDetails && (
