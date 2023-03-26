@@ -37,6 +37,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { CSVLink } from "react-csv";
 
 export default function Supervisors() {
   const navigate = useNavigate();
@@ -44,6 +45,14 @@ export default function Supervisors() {
   const [supervisors, setSupervisors] = useState<Supervisor[]>([]);
   const [isSupervisorsFetching, setSupervisorsFetching] =
     useState<boolean>(false);
+
+  const ExportHeaders = [
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "email", label: "Email" },
+    { key: "phone", label: "Phone" },
+  ];
+  const [exportData, setExportData] = useState<any[]>([]);
 
   const fetchSupervisors = async () => {
     setSupervisorsFetching(true);
@@ -56,6 +65,18 @@ export default function Supervisors() {
     console.log(supervisorsData);
     if (supervisorsData.data.auth) {
       setSupervisors(supervisorsData.data.data);
+      const exportDatum = supervisorsData.data.data.map((singleSupervisor) => {
+        let obj = {
+          firstName: singleSupervisor.firstName,
+          lastName: singleSupervisor.lastName,
+          email: singleSupervisor.email,
+          phone: singleSupervisor.phone,
+        };
+        // setExportData((prevData) => [...prevData, obj]);
+        return obj;
+      });
+      console.log("Data to Export: ", exportDatum);
+      setExportData(exportDatum);
     }
   };
 
@@ -139,18 +160,30 @@ export default function Supervisors() {
       )}
       <br />
       <br />
-      <Button
-        colorScheme={"linkedin"}
-        width={200}
-        height={35}
-        disabled={isSupervisorsFetching}
-        onClick={fetchSupervisors}
-      >
-        Refresh &nbsp;
-        {isSupervisorsFetching && (
-          <i className="far fa-spinner-third fa-spin" />
-        )}
-      </Button>
+      <Stack direction={"row"} spacing={5}>
+        <Button
+          colorScheme={"linkedin"}
+          width={200}
+          height={35}
+          disabled={isSupervisorsFetching}
+          onClick={fetchSupervisors}
+        >
+          Refresh &nbsp;
+          {isSupervisorsFetching && (
+            <i className="far fa-spinner-third fa-spin" />
+          )}
+        </Button>
+        <CSVLink
+          data={exportData}
+          headers={ExportHeaders}
+          filename="Supervisors"
+        >
+          <Button colorScheme={"whatsapp"} width={200} height={35}>
+            Export to CSV &nbsp;<i className="far fa-cloud-download-alt"></i>
+          </Button>
+        </CSVLink>
+      </Stack>
+
       <br />
       <br />
       {isSupervisorsFetching && (

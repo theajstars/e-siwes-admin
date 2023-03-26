@@ -304,13 +304,13 @@ export default function Students() {
           Refresh &nbsp;
           {IsDataFetching && <i className="far fa-spinner-third fa-spin" />}
         </Button>
-        <CSVLink data={exportData} headers={DataHeaders}>
-          <Button colorScheme={"whatsapp"} width={200} height={35}>
-            <CSVLink data={exportData} headers={DataHeaders}>
-              Export to CSV &nbsp;<i className="far fa-cloud-download-alt"></i>
-            </CSVLink>
-          </Button>
-        </CSVLink>
+        {/* <CSVLink data={exportData} headers={DataHeaders}> */}
+        <Button colorScheme={"whatsapp"} width={200} height={35}>
+          <CSVLink data={exportData} headers={DataHeaders} filename="Students ">
+            Export to CSV &nbsp;<i className="far fa-cloud-download-alt"></i>
+          </CSVLink>
+        </Button>
+        {/* </CSVLink> */}
       </Stack>
       <br />
       <br />
