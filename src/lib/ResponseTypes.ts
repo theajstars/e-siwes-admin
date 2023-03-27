@@ -61,6 +61,14 @@ export interface Student {
   hasPaid: boolean;
 }
 
+export interface Admin {
+  email: string;
+  id: string;
+  password: string;
+  _id: string;
+  message?: string;
+}
+
 export interface StudentResponse extends Omit<DefaultResponse, "data"> {
   data: {
     auth: boolean;
@@ -107,5 +115,18 @@ export interface SingleStudentResponse extends Omit<DefaultResponse, "data"> {
     auth: boolean;
     data?: Student;
     message: string;
+  };
+}
+export interface AdminResponse extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    data: Admin;
+  };
+}
+export interface ValidatePasswordResponse
+  extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    message?: string;
   };
 }

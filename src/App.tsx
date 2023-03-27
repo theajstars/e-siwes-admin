@@ -10,6 +10,12 @@ import Cookies from "js-cookie";
 import Notification from "./Pages/Notification";
 import SingleSupervisor from "./Pages/SingleSupervisor";
 import SingleStudent from "./Pages/SingleStudent";
+
+function validateEmail(email: string) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 function App() {
   return (
     <Router>
@@ -32,4 +38,5 @@ function App() {
   );
 }
 
+export { validateEmail };
 export default App;
