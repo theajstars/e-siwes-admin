@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import { Link, useLocation } from "react-router-dom";
 
+import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 
 import Logo from "../../Assets/IMG/Logo.png";
@@ -28,14 +29,32 @@ export default function Navbar() {
     window.location.href = "/login";
   };
 
+  const [isNavMenuOpen, setNavMenuOpen] = useState<boolean>(true);
   return (
     <div className="nav-container flex-row">
+      <span className="nav-btn" onClick={() => setNavMenuOpen(!isNavMenuOpen)}>
+        {isNavMenuOpen ? (
+          <i className="far fa-angle-up" />
+        ) : (
+          <i className="far fa-angle-down" />
+        )}
+      </span>
       <Container>
         <nav className="nav flex-row">
           <Link to="/home">
             <img src={Logo} className="nav-logo" alt="" />
           </Link>
-          <div className="nav-items flex-row">
+          <motion.div
+            className="nav-items flex-row"
+            initial={false}
+            animate={{
+              height: isNavMenuOpen ? "fit-content" : 0,
+              paddingTop: isNavMenuOpen ? "30px" : "0px",
+              paddingLeft: isNavMenuOpen ? "30px" : "0px",
+              paddingRight: isNavMenuOpen ? "30px" : "0px",
+              paddingBottom: isNavMenuOpen ? "30px" : "0px",
+            }}
+          >
             <Link
               to="/home"
               className={`nav-item ${
@@ -78,7 +97,7 @@ export default function Navbar() {
             >
               <TagLabel>Logout</TagLabel>
             </Tag>
-          </div>
+          </motion.div>
         </nav>
       </Container>
     </div>

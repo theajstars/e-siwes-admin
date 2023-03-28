@@ -2,6 +2,7 @@
 @import url("./Colors.css");
 @import url("./Navbar.css");
 @import url("./Container.css");
+@import url("./Small.css");
 
 body {
   margin: 0 auto;
