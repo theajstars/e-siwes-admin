@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import Notification from "./Pages/Notification";
 import SingleSupervisor from "./Pages/SingleSupervisor";
 import SingleStudent from "./Pages/SingleStudent";
+import Reset from "./Pages/Reset";
 
 function validateEmail(email: string) {
   const re =
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/reset" element={<Reset />} />
         <Route path="/home" element={<Home />}>
           <Route path="/home/supervisors" element={<Supervisors />} />
           <Route

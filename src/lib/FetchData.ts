@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { Endpoints } from "./Endpoints";
-import { DefaultResponse } from "./ResponseTypes";
 
 interface FetchDataParams {
   type: "GET" | "POST";
@@ -16,8 +15,8 @@ const FetchData = async ({ type, route, data }: FetchDataParams) => {
   } else {
     const config: AxiosRequestConfig = {
       method: type,
-      // baseURL: "http://localhost:8080".concat(route),
-      baseURL: "https://timothy-siwes-api.onrender.com".concat(route),
+      baseURL: "http://localhost:8080".concat(route),
+      // baseURL: "https://timothy-siwes-api.onrender.com".concat(route),
       headers: { "x-access-token": token },
       data: type === "POST" ? data : "",
     };

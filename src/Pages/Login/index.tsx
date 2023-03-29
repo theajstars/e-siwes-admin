@@ -70,7 +70,13 @@ export const Login = () => {
             placeholder="Password"
             type={"password"}
           />
-          <Button type="submit" colorScheme="linkedin" width={"100%"}>
+          <Button
+            type="submit"
+            colorScheme="linkedin"
+            width={"100%"}
+            disabled={isFormSubmitting}
+            opacity={isFormSubmitting ? 0.5 : 1}
+          >
             Continue &nbsp;
             {isFormSubmitting && <i className="far fa-spinner-third fa-spin" />}
           </Button>

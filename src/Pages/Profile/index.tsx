@@ -18,6 +18,7 @@ import {
   AdminResponse,
   ValidatePasswordResponse,
 } from "../../lib/ResponseTypes";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const addToast = useToast();
@@ -158,7 +159,15 @@ export default function Profile() {
           </Button>
         </Stack>
         <Stack spacing={5} direction="column">
-          <Text size={"24px"}>Update Password</Text>
+          <Stack spacing={5} direction="row" alignItems="center">
+            <Text size={"24px"}>Update Password</Text>
+            <a target="_blank" href="/reset">
+              <Text color="linkedin.400">
+                Reset Password <i className="far fa-external-link-alt" />
+              </Text>
+            </a>
+          </Stack>
+
           <Input
             type="password"
             placeholder="Current Password"
