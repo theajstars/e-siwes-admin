@@ -207,7 +207,7 @@ export default function Students() {
           onClick={generateStudentToken}
           width={"230px"}
         >
-          Generate Student Token &nbsp;{" "}
+          Generate Token &nbsp;{" "}
           {isStudentTokenGenerating && (
             <i className="far fa-spinner-third fa-spin" />
           )}
@@ -217,7 +217,7 @@ export default function Students() {
           colorScheme={"orange"}
           onClick={() => navigate("/home/notification")}
         >
-          Send Students Notification &nbsp;{" "}
+          Send Notification &nbsp;{" "}
         </Button>
       </Stack>
       {studentToken.length > 0 && (

@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 
 import { Button, Input, Stack, Text, useToast } from "@chakra-ui/react";
 import { validateEmail } from "../../App";
+import { FetchData } from "../../lib/FetchData";
+import { Endpoints } from "../../lib/Endpoints";
+import { DefaultResponse } from "../../lib/ResponseTypes";
+import { AxiosError } from "axios";
 
 type ResetPasswordType = {
   code: string;
@@ -22,7 +26,7 @@ const Reset = () => {
   const resetPassword = (e: any) => {
     e.preventDefault();
   };
-  const resendCode = () => {
+  const resendCode = async () => {
     const isEmailValid = validateEmail(Form.email);
     if (!isEmailValid) {
       addToast({
@@ -31,6 +35,22 @@ const Reset = () => {
       });
     } else {
       // Send new code
+      setCodeResending(true);
+      const sendNewToken: DefaultResponse = await FetchData({
+        route: Endpoints.SendResetToken,
+        type: "POST",
+        data: { type: "admin", email: Form.email },
+      }).catch((e: AxiosError) => {
+        setCodeResending(false);
+        if (e.response?.status === 401) {
+          addToast({
+            status: "error",
+            description: "No user found",
+          });
+        }
+      });
+      setCodeResending(false);
+      console.log(sendNewToken);
     }
   };
 
@@ -46,7 +66,8 @@ const Reset = () => {
               SetForm({ ...Form, email: e.target.value });
             }}
             type="text"
-            name="sefen-digit-code-ffs"
+            name="email"
+            id="email"
             placeholder="Email"
             spellCheck={false}
           />

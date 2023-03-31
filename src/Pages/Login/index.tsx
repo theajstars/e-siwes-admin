@@ -31,6 +31,11 @@ export const Login = () => {
         route: Endpoints.AdminLogin,
         type: "POST",
         data: Form,
+      }).catch(() => {
+        addToast({
+          status: "error",
+          description: "An error occured! Please try again",
+        });
       });
       setFormSubmitting(false);
       console.log(response);
