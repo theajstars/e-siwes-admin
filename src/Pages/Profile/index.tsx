@@ -16,6 +16,7 @@ import { Endpoints } from "../../lib/Endpoints";
 import {
   Admin,
   AdminResponse,
+  DefaultResponse,
   ValidatePasswordResponse,
 } from "../../lib/ResponseTypes";
 import { Link } from "react-router-dom";
@@ -30,6 +31,9 @@ export default function Profile() {
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassowrd, setConfirmNewPassword] = useState<string>("");
+
+  const [isEmailUpdating, setEmailUpdating] = useState<boolean>(false);
+  const [isPasswordUpdating, setPasswordUpdating] = useState<boolean>(false);
 
   const GetAdminDetails = async () => {
     const adminDetails: AdminResponse = await FetchData({
@@ -73,14 +77,28 @@ export default function Profile() {
       newPassword.length > 7 &&
       newPassword === confirmNewPassowrd
     ) {
+      setPasswordUpdating(true);
       const isPasswordValid = await ValidateAdminPassword(currentPassword);
       if (isPasswordValid) {
-        FetchData({
+        const passwordUpdate: DefaultResponse = await FetchData({
           route: Endpoints.UpdateAdminPassword,
           type: "POST",
           data: { password: newPassword },
         });
+        setPasswordUpdating(false);
+        if (passwordUpdate.data.auth) {
+          addToast({
+            description: "Your password has been changed!",
+            status: "success",
+          });
+        } else {
+          addToast({
+            description: "There was an error changing your password!",
+            status: "error",
+          });
+        }
       } else {
+        setPasswordUpdating(false);
         addToast({
           description: "Password is not correct!",
           status: "error",
@@ -90,12 +108,11 @@ export default function Profile() {
   };
 
   const ChangeEmail = async () => {
-    const isPasswordValid = await ValidateAdminPassword(password);
     const isEmailValid = validateEmail(email);
     if (!isEmailValid) {
       addToast({
         title: "Please enter a valid email!",
-        status: "error",
+        status: "warning",
       });
     } else {
       if (email !== confirmEmail) {
@@ -107,12 +124,33 @@ export default function Profile() {
     }
     if (isEmailValid && email === confirmEmail) {
       // Change admin email
+      setEmailUpdating(true);
+      const isPasswordValid = await ValidateAdminPassword(password);
       if (isPasswordValid) {
-        FetchData({
+        const emailUpdate: DefaultResponse = await FetchData({
           route: Endpoints.UpdateAdminEmail,
           type: "POST",
           data: { newEmail: email },
+        }).catch(() => {
+          addToast({
+            description: "Some error occurred!",
+            status: "error",
+          });
+          setEmailUpdating(false);
         });
+        setEmailUpdating(false);
+        if (emailUpdate.data.auth) {
+          // Email has been changed
+          addToast({
+            description: "Your email has been changed!",
+            status: "success",
+          });
+        } else {
+          addToast({
+            description: "Some error occurred!",
+            status: "error",
+          });
+        }
       } else {
         addToast({
           title: "Password is not correct!",
@@ -154,8 +192,14 @@ export default function Profile() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button colorScheme={"linkedin"} onClick={ChangeEmail}>
-            Change Email
+          <Button
+            disabled={isEmailUpdating}
+            opacity={isEmailUpdating ? 0.5 : 1}
+            colorScheme={"linkedin"}
+            onClick={ChangeEmail}
+          >
+            Change Email &nbsp;{" "}
+            {isEmailUpdating && <i className="far fa-spinner-third fa-spin" />}
           </Button>
         </Stack>
         <Stack spacing={5} direction="column">
@@ -186,8 +230,16 @@ export default function Profile() {
             value={confirmNewPassowrd}
             onChange={(e) => setConfirmNewPassword(e.target.value)}
           />
-          <Button colorScheme={"linkedin"} onClick={ChangePassword}>
-            Change Password
+          <Button
+            colorScheme={"linkedin"}
+            disabled={isPasswordUpdating}
+            opacity={isPasswordUpdating ? 0.5 : 1}
+            onClick={ChangePassword}
+          >
+            Change Password &nbsp;{" "}
+            {isPasswordUpdating && (
+              <i className="far fa-spinner-third fa-spin" />
+            )}
           </Button>
         </Stack>
       </Stack>

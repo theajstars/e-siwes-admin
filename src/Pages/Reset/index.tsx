@@ -23,8 +23,76 @@ const Reset = () => {
     password: "",
     passwordConfirm: "",
   });
-  const resetPassword = (e: any) => {
+  const resetPassword = async (e: any) => {
     e.preventDefault();
+    const isEmailValid = validateEmail(Form.email);
+    if (Form.code.length !== 7) {
+      addToast({
+        description: "Please enter 7 Digit Code",
+        status: "warning",
+      });
+    } else {
+      if (!isEmailValid) {
+        // Email is not valid
+        addToast({
+          description: "Please enter a valid email",
+          status: "warning",
+        });
+      } else {
+        if (Form.password.length < 7) {
+          addToast({
+            description: "Password must be at least 7 digits",
+            status: "warning",
+          });
+        } else {
+          if (Form.password !== Form.passwordConfirm) {
+            addToast({
+              description: "Your passwords do not match",
+              status: "error",
+            });
+          }
+        }
+      }
+    }
+
+    if (
+      Form.code.length === 7 &&
+      isEmailValid &&
+      Form.password.length >= 7 &&
+      Form.password === Form.passwordConfirm
+    ) {
+      setFormSubmitting(true);
+      const VerifyCode: DefaultResponse = await FetchData({
+        type: "POST",
+        route: Endpoints.VerifyResetToken,
+        data: { email: Form.email, type: "admin", code: Form.code },
+      }).catch(() => setFormSubmitting(false));
+      console.log(VerifyCode);
+      if (VerifyCode.data.auth) {
+        // We are a go, Update Password
+        const UpdatePassword: DefaultResponse = await FetchData({
+          type: "POST",
+          route: Endpoints.UpdateAdminPassword,
+          data: { password: Form.password },
+        });
+        console.log(UpdatePassword);
+        if (UpdatePassword.data.auth) {
+          addToast({
+            description: "Your password has been changed!",
+            status: "success",
+          });
+        } else {
+          addToast({
+            description: "An error occured. Please try again",
+            status: "error",
+          });
+        }
+        setFormSubmitting(false);
+      } else {
+        addToast({ description: "Invalid code or email", status: "error" });
+        setFormSubmitting(false);
+      }
+    }
   };
   const resendCode = async () => {
     const isEmailValid = validateEmail(Form.email);
@@ -51,6 +119,12 @@ const Reset = () => {
       });
       setCodeResending(false);
       console.log(sendNewToken);
+      if (sendNewToken.data.auth) {
+        addToast({
+          description: "Token sent to your email!",
+          status: "success",
+        });
+      }
     }
   };
 

@@ -16,5 +16,6 @@ enum Endpoints {
   UnassignStudentToSupervisor = "/admin/supervisor/student/remove",
   SendStudentNotification = "/admin/student/notification/send",
   SendResetToken = "/reset/generate",
+  VerifyResetToken = "/reset/verify",
 }
 export { Endpoints };
