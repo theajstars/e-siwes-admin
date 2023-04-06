@@ -58,6 +58,7 @@ export default function Students() {
   const [searchString, setSearchString] = useState<string>("");
 
   const [studentToken, setStudentToken] = useState<string>("");
+  const [tokenStudent, setTokenStudent] = useState<string>("");
   const [isStudentTokenGenerating, setStudentTokenGenerating] =
     useState<boolean>(false);
 
@@ -182,43 +183,60 @@ export default function Students() {
   };
 
   const generateStudentToken = () => {
-    setStudentTokenGenerating(true);
-    FetchData({
-      route: Endpoints.GenerateStudentToken,
-      type: "GET",
-    })
-      .then((response: DefaultResponse) => {
-        if (response.data.auth) {
-          const token = response.data.data;
-          setStudentToken(token);
-        }
-        setStudentTokenGenerating(false);
-      })
-      .catch(() => {
-        setStudentTokenGenerating(false);
+    if (tokenStudent.length !== 9) {
+      addToast({
+        description: "Please provide a matric number!",
+        status: "warning",
       });
+    } else {
+      setStudentTokenGenerating(true);
+      FetchData({
+        route: Endpoints.GenerateStudentToken,
+        type: "POST",
+        data: { matricNumber: tokenStudent },
+      })
+        .then((response: DefaultResponse) => {
+          if (response.data.auth) {
+            const token = response.data.data;
+            setStudentToken(token);
+          }
+          setStudentTokenGenerating(false);
+        })
+        .catch(() => {
+          setStudentTokenGenerating(false);
+        });
+    }
   };
   return (
     <>
       <br />
-      <Stack direction={"row"} spacing={5}>
-        <Button
-          colorScheme={"linkedin"}
-          onClick={generateStudentToken}
+      <Stack direction={"column"} spacing={5}>
+        <Stack direction={"row"} spacing={5}>
+          <Button
+            colorScheme={"linkedin"}
+            onClick={generateStudentToken}
+            width={"230px"}
+          >
+            Generate Token &nbsp;{" "}
+            {isStudentTokenGenerating && (
+              <i className="far fa-spinner-third fa-spin" />
+            )}
+          </Button>
+          <Button
+            width={"230px"}
+            colorScheme={"orange"}
+            onClick={() => navigate("/home/notification")}
+          >
+            Send Notification &nbsp;{" "}
+          </Button>
+        </Stack>
+        <Input
           width={"230px"}
-        >
-          Generate Token &nbsp;{" "}
-          {isStudentTokenGenerating && (
-            <i className="far fa-spinner-third fa-spin" />
-          )}
-        </Button>
-        <Button
-          width={"230px"}
-          colorScheme={"orange"}
-          onClick={() => navigate("/home/notification")}
-        >
-          Send Notification &nbsp;{" "}
-        </Button>
+          placeholder="Matric Number"
+          value={tokenStudent}
+          maxLength={9}
+          onChange={(e) => setTokenStudent(e.target.value)}
+        />
       </Stack>
       {studentToken.length > 0 && (
         <Card width={"230px"} marginTop={2}>
