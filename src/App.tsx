@@ -17,6 +17,37 @@ function validateEmail(email: string) {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
+type CourseSlugs =
+  | "cyber_security"
+  | "software_engineering"
+  | "computer_science"
+  | "information_technology"
+  | string;
+const getCourseName = (courseSlug: CourseSlugs) => {
+  if (courseSlug) {
+    switch (courseSlug) {
+      case "":
+        // Student has not selected course
+        return undefined;
+        break;
+      case "cyber_security":
+        return "Cyber Security";
+        break;
+      case "computer_science":
+        return "Computer Science";
+        break;
+      case "information_technology":
+        return "Information Technology";
+        break;
+      case "software_engineering":
+        return "Software Engineering";
+        break;
+      default:
+        return undefined;
+    }
+  }
+  return undefined;
+};
 function App() {
   return (
     <Router>
@@ -40,5 +71,5 @@ function App() {
   );
 }
 
-export { validateEmail };
+export { validateEmail, getCourseName };
 export default App;

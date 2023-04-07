@@ -1,6 +1,26 @@
 .nav-btn {
   display: none;
 }
+
+.css-12t402l::-webkit-scrollbar {
+  height: 12px;
+}
+
+/* Track */
+.css-12t402l::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+.css-12t402l::-webkit-scrollbar-thumb {
+  background: #005e93;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.css-12t402l::-webkit-scrollbar-thumb:hover {
+  background: #086ca6;
+}
 @media screen and (max-width: 800px) {
   .nav-btn {
     display: flex;

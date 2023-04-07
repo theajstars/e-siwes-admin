@@ -39,6 +39,7 @@ import {
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CSVLink } from "react-csv";
+import { getCourseName } from "../../App";
 
 export default function Students() {
   const addToast = useToast();
@@ -102,7 +103,7 @@ export default function Students() {
                 singleStudentObject.bankAccount.masterListNumber,
               CompanyName: singleStudentObject.company.name,
               CompanyAddress: singleStudentObject.company.address,
-              courseOfStudy: singleStudentObject.courseOfStudy,
+              courseOfStudy: getCourseName(singleStudentObject.courseOfStudy),
               Email: singleStudentObject.email,
               FirstName: singleStudentObject.firstName,
               PaymentStatus: singleStudentObject.hasPaid ? "Paid" : "Not Paid",
@@ -427,7 +428,7 @@ export default function Students() {
                       )}
 
                       <Td>{student.yearOfStudy}</Td>
-                      <Td>{student.courseOfStudy}</Td>
+                      <Td>{getCourseName(student.courseOfStudy)}</Td>
                       {viewInternshipDetails && (
                         <>
                           <Td>{student.attachmentPeriod}</Td>
@@ -452,19 +453,6 @@ export default function Students() {
                 })}
               </Tbody>
             </Table>
-            <center>
-              <br />
-              <Button
-                type="submit"
-                colorScheme="linkedin"
-                width={"300px"}
-                height={35}
-              >
-                View All
-              </Button>
-              <br />
-              <br />
-            </center>
           </TableContainer>
         </>
       ) : (

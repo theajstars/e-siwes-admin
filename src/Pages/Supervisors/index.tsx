@@ -232,19 +232,6 @@ export default function Supervisors() {
               })}
             </Tbody>
           </Table>
-          <center>
-            <br />
-            <Button
-              type="submit"
-              colorScheme="linkedin"
-              width={"300px"}
-              height={35}
-            >
-              View All
-            </Button>
-            <br />
-            <br />
-          </center>
         </TableContainer>
       ) : (
         <center>

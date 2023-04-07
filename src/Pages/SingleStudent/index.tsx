@@ -31,6 +31,7 @@ import {
 } from "../../lib/ResponseTypes";
 import { FetchData } from "../../lib/FetchData";
 import { Endpoints } from "../../lib/Endpoints";
+import { getCourseName } from "../../App";
 
 export default function SingleStudent() {
   const addToast = useToast();
@@ -121,7 +122,7 @@ export default function SingleStudent() {
                     </Heading>
                     <Text pt="2" fontSize="sm">
                       {isLengthPlusOne(student.courseOfStudy) ? (
-                        student.courseOfStudy
+                        getCourseName(student.courseOfStudy)
                       ) : (
                         <i>undefined</i>
                       )}
