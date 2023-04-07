@@ -39,7 +39,7 @@ import {
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CSVLink } from "react-csv";
-import { getCourseName } from "../../App";
+import { Banks, getCourseName } from "../../App";
 
 export default function Students() {
   const addToast = useToast();
@@ -82,6 +82,9 @@ export default function Students() {
   ];
   const [exportData, setExportData] = useState<any[]>([]);
 
+  const getStudentBankName = (bankID: string) => {
+    return Banks.filter((b) => b.id === bankID)[0].name;
+  };
   const getStudents = () => {
     setIsDataFetching(true);
     FetchData({
@@ -96,7 +99,9 @@ export default function Students() {
           const exportDatum = response.data.data.map((singleStudentObject) => {
             let obj = {
               AttatchmentPeriod: singleStudentObject.attachmentPeriod,
-              BankName: singleStudentObject.bankAccount.name,
+              BankName: getStudentBankName(
+                singleStudentObject.bankAccount.name
+              ),
               BankNumber: singleStudentObject.bankAccount.number,
               SortCode: singleStudentObject.bankAccount.sortCode,
               MasterListNumber:
@@ -420,7 +425,9 @@ export default function Students() {
                       </Td>
                       {viewBankDetails && (
                         <>
-                          <Td>{student.bankAccount.name}</Td>
+                          <Td>
+                            {getStudentBankName(student.bankAccount.name)}
+                          </Td>
                           <Td>{student.bankAccount.number}</Td>
                           <Td>{student.bankAccount.sortCode}</Td>
                           <Td>{student.bankAccount.masterListNumber}</Td>

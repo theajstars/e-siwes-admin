@@ -3,6 +3,7 @@
 @import url("./Navbar.css");
 @import url("./Container.css");
 @import url("./Small.css");
+@import url("./MegaLoader.css");
 
 body {
   margin: 0 auto;

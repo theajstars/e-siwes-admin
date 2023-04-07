@@ -27,130 +27,162 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
+import MegaLoader from "../MegaLoader";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [students, setStudents] = useState<Student[]>([]);
   const [supervisors, setSupervisors] = useState<Supervisor[]>([]);
+
+  const [areStudentsLoading, setStudentsLoading] = useState<boolean>(false);
+  const [areSupervisorsLoading, setSupervisorsLoading] =
+    useState<boolean>(false);
   useEffect(() => {
     // Get All Students
+    setStudentsLoading(true);
     FetchData({
       type: "GET",
       route: Endpoints.GetStudents,
-    }).then((response: StudentResponse) => {
-      if (response.data.auth) {
-        setStudents(response.data.data);
-      }
-    });
+    })
+      .then((response: StudentResponse) => {
+        setStudentsLoading(false);
+        if (response.data.auth) {
+          setStudents(response.data.data);
+        }
+      })
+      .catch(() => {
+        setStudentsLoading(false);
+      });
 
     // Get All Supervisors
+    setSupervisorsLoading(true);
     FetchData({
       type: "GET",
       route: Endpoints.GetSupervisorProfiles,
-    }).then((response: SupervisorResponse) => {
-      if (response.data.auth) {
-        setSupervisors(response.data.data);
-      }
-    });
+    })
+      .then((response: SupervisorResponse) => {
+        setSupervisorsLoading(false);
+
+        if (response.data.auth) {
+          setSupervisors(response.data.data);
+        }
+      })
+      .catch(() => {
+        setSupervisorsLoading(false);
+      });
   }, []);
   return (
     <>
       <br />
       <br />
-      <Text fontSize="xl">Students</Text>
-      <br />
-      {students.length > 0 ? (
-        <TableContainer border={"1px"} borderRadius={20} borderColor="#E2E8F0">
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Number</Th>
-                <Th>First Name</Th>
-                <Th>Last Name</Th>
-                <Th>Email</Th>
-                <Th>Matric Number</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {students.map((student, index) => {
-                return (
-                  <Tr>
-                    <Td color="blue.500">{index + 1}</Td>
-                    <Td>{student.firstName}</Td>
-                    <Td>{student.lastName}</Td>
-                    <Td>{student.email}</Td>
-                    <Td color={"blue.500"}>{student.matricNumber}</Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-          <center>
-            <br />
-            <Button
-              type="submit"
-              colorScheme="linkedin"
-              width={"300px"}
-              height={35}
-              onClick={() => navigate("/home/students")}
-            >
-              View All
-            </Button>
-            <br />
-            <br />
-          </center>
-        </TableContainer>
+      {areStudentsLoading || areSupervisorsLoading ? (
+        <MegaLoader />
       ) : (
-        <center>
-          <Text fontSize="xl">There are currently no students!</Text>
-        </center>
-      )}
-      <br />
-      <br />
-      <Text fontSize="xl">Supervisors</Text>
-      <br />
-      {supervisors.length > 0 ? (
-        <TableContainer border={"1px"} borderRadius={20} borderColor="#E2E8F0">
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Number</Th>
-                <Th>First Name</Th>
-                <Th>Last Name</Th>
-                <Th>Email</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {supervisors.map((supervisor, index) => {
-                return (
-                  <Tr>
-                    <Td color="blue.500">{index + 1}</Td>
-                    <Td>{supervisor.firstName}</Td>
-                    <Td>{supervisor.lastName}</Td>
-                    <Td>{supervisor.email}</Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-          <center>
-            <br />
-            <Button
-              type="submit"
-              colorScheme="linkedin"
-              width={"300px"}
-              height={35}
-              onClick={() => navigate("/home/supervisors")}
+        <>
+          <Text fontSize="xl">Students</Text>
+          <br />
+          {students.length > 0 ? (
+            <TableContainer
+              border={"1px"}
+              borderRadius={20}
+              borderColor="#E2E8F0"
             >
-              View All
-            </Button>
-            <br />
-            <br />
-          </center>
-        </TableContainer>
-      ) : (
-        <center>
-          <Text fontSize="xl">There are currently no supervisors!</Text>
-        </center>
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Number</Th>
+                    <Th>First Name</Th>
+                    <Th>Last Name</Th>
+                    <Th>Email</Th>
+                    <Th>Matric Number</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {students.map((student, index) => {
+                    return (
+                      <Tr>
+                        <Td color="blue.500">{index + 1}</Td>
+                        <Td>{student.firstName}</Td>
+                        <Td>{student.lastName}</Td>
+                        <Td>{student.email}</Td>
+                        <Td color={"blue.500"}>{student.matricNumber}</Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </Table>
+              <center>
+                <br />
+                <Button
+                  type="submit"
+                  colorScheme="linkedin"
+                  width={"300px"}
+                  height={35}
+                  onClick={() => navigate("/home/students")}
+                >
+                  View All
+                </Button>
+                <br />
+                <br />
+              </center>
+            </TableContainer>
+          ) : (
+            <center>
+              <Text fontSize="xl">There are currently no students!</Text>
+            </center>
+          )}
+          <br />
+          <br />
+          <Text fontSize="xl">Supervisors</Text>
+          <br />
+          {supervisors.length > 0 ? (
+            <TableContainer
+              border={"1px"}
+              borderRadius={20}
+              borderColor="#E2E8F0"
+            >
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Number</Th>
+                    <Th>First Name</Th>
+                    <Th>Last Name</Th>
+                    <Th>Email</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {supervisors.map((supervisor, index) => {
+                    return (
+                      <Tr>
+                        <Td color="blue.500">{index + 1}</Td>
+                        <Td>{supervisor.firstName}</Td>
+                        <Td>{supervisor.lastName}</Td>
+                        <Td>{supervisor.email}</Td>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </Table>
+              <center>
+                <br />
+                <Button
+                  type="submit"
+                  colorScheme="linkedin"
+                  width={"300px"}
+                  height={35}
+                  onClick={() => navigate("/home/supervisors")}
+                >
+                  View All
+                </Button>
+                <br />
+                <br />
+              </center>
+            </TableContainer>
+          ) : (
+            <center>
+              <Text fontSize="xl">There are currently no supervisors!</Text>
+            </center>
+          )}
+        </>
       )}
     </>
   );
