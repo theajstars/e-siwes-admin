@@ -42,6 +42,9 @@ const Banks = [
   { id: "22", name: "Wema Bank", code: "035" },
   { id: "23", name: "Zenith Bank", code: "057" },
 ];
+const getStudentBankName = (bankID: string) => {
+  return Banks.filter((b) => b.id === bankID)[0].name;
+};
 type CourseSlugs =
   | "cyber_security"
   | "software_engineering"
@@ -96,5 +99,5 @@ function App() {
   );
 }
 
-export { validateEmail, getCourseName, Banks };
+export { validateEmail, getCourseName, Banks, getStudentBankName };
 export default App;

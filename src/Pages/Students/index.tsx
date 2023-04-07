@@ -39,7 +39,7 @@ import {
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CSVLink } from "react-csv";
-import { Banks, getCourseName } from "../../App";
+import { Banks, getCourseName, getStudentBankName } from "../../App";
 
 export default function Students() {
   const addToast = useToast();
@@ -82,9 +82,6 @@ export default function Students() {
   ];
   const [exportData, setExportData] = useState<any[]>([]);
 
-  const getStudentBankName = (bankID: string) => {
-    return Banks.filter((b) => b.id === bankID)[0].name;
-  };
   const getStudents = () => {
     setIsDataFetching(true);
     FetchData({

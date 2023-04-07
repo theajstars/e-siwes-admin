@@ -31,7 +31,7 @@ import {
 } from "../../lib/ResponseTypes";
 import { FetchData } from "../../lib/FetchData";
 import { Endpoints } from "../../lib/Endpoints";
-import { getCourseName } from "../../App";
+import { getCourseName, getStudentBankName } from "../../App";
 
 export default function SingleStudent() {
   const addToast = useToast();
@@ -200,7 +200,7 @@ export default function SingleStudent() {
                           <Tr>
                             <Td>
                               {isLengthPlusOne(student.bankAccount.name) ? (
-                                student.bankAccount.name
+                                getStudentBankName(student.bankAccount.name)
                               ) : (
                                 <i>undefined</i>
                               )}
