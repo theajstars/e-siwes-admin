@@ -1,5 +1,6 @@
 enum Endpoints {
   AdminLogin = "/admin/login",
+  ObtainCurrentYear = "/admin/year/obtain",
   ValidateAdminToken = "/admin/token/validate",
   GetAdminProfile = "/admin/profile",
   UpdateAdminEmail = "/admin/profile/email",
@@ -17,5 +18,6 @@ enum Endpoints {
   SendStudentNotification = "/admin/student/notification/send",
   SendResetToken = "/reset/generate",
   VerifyResetToken = "/reset/verify",
+  TerminateSiwesYear = "/admin/year/terminate",
 }
 export { Endpoints };

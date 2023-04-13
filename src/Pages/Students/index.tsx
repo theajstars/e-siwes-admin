@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Routes, Route, useNavigate, Link } from "react-router-dom";
 import { Endpoints } from "../../lib/Endpoints";
@@ -35,6 +35,15 @@ import {
   Box,
   Card,
   useToast,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverFooter,
+  ButtonGroup,
 } from "@chakra-ui/react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -58,6 +67,8 @@ export default function Students() {
 
   const [searchString, setSearchString] = useState<string>("");
 
+  const [isConfirmTerminate, setConfirmTerminate] = useState<boolean>(false);
+  const [isTerminating, setTerminating] = useState<boolean>(false);
   const [studentToken, setStudentToken] = useState<string>("");
   const [tokenStudent, setTokenStudent] = useState<string>("");
   const [isStudentTokenGenerating, setStudentTokenGenerating] =
@@ -210,10 +221,113 @@ export default function Students() {
         });
     }
   };
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  const [siwesYearToTerminate, setSiwesYearToTerminate] = useState<string>("");
+  const TerminateSiwesYear = async () => {
+    setTerminating(true);
+    const Termination: DefaultResponse = await FetchData({
+      route: Endpoints.TerminateSiwesYear,
+      type: "POST",
+      data: { year: siwesYearToTerminate },
+    }).catch((err) => {
+      addToast({ description: "An error occured!", status: "error" });
+      setTerminating(false);
+    });
+    setTerminating(false);
+    if (Termination.data.auth) {
+      getStudents();
+      addToast({ description: "Termination successful!", status: "success" });
+    } else {
+      addToast({ description: "Year already exists!", status: "error" });
+    }
+  };
   return (
     <>
       <br />
       <Stack direction={"column"} spacing={5}>
+        <Popover
+          initialFocusRef={initialFocusRef}
+          placement="bottom"
+          closeOnBlur={false}
+          isOpen={isConfirmTerminate}
+        >
+          <PopoverTrigger>
+            <Button
+              colorScheme={"linkedin"}
+              height={9}
+              marginTop={3}
+              marginBottom={3}
+              onClick={() => setConfirmTerminate(true)}
+              disabled={isTerminating}
+              width={"230px"}
+            >
+              {!isTerminating ? (
+                <Text>Terminate SIWES Year</Text>
+              ) : (
+                <Text>
+                  Terminating &nbsp;{" "}
+                  <i className="far fa-spinner-third fa-spin" />
+                </Text>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent color="white" bg="blue.800" borderColor="blue.800">
+            <PopoverHeader pt={4} fontWeight="bold" border="0">
+              Terminate SIWES Year
+            </PopoverHeader>
+            <PopoverArrow />
+            <PopoverCloseButton
+              onClick={() => {
+                setConfirmTerminate(false);
+              }}
+            />
+            <PopoverBody>
+              <Stack direction="column" spacing={3}>
+                <Text>This action CANNOT be undone</Text>
+                <Input
+                  value={siwesYearToTerminate}
+                  onChange={(e) => setSiwesYearToTerminate(e.target.value)}
+                  placeholder={`Input year e.g: ${new Date(
+                    Date.now()
+                  ).getFullYear()}`}
+                />
+              </Stack>
+            </PopoverBody>
+            <PopoverFooter
+              border="0"
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              pb={4}
+            >
+              <ButtonGroup size="sm">
+                <Button
+                  colorScheme="green"
+                  onClick={() => {
+                    if (siwesYearToTerminate.length !== 4) {
+                      addToast({
+                        status: "warning",
+                        description: "Please provide the year",
+                      });
+                    } else {
+                      TerminateSiwesYear();
+                    }
+                  }}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  colorScheme="red"
+                  ref={initialFocusRef}
+                  onClick={() => setConfirmTerminate(false)}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </PopoverFooter>
+          </PopoverContent>
+        </Popover>
         <Stack direction={"row"} spacing={5}>
           <Button
             colorScheme={"linkedin"}

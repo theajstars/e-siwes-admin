@@ -68,6 +68,12 @@ export interface Admin {
   _id: string;
   message?: string;
 }
+export interface Year {
+  _id: string;
+  id: string;
+  year: string;
+  current: boolean;
+}
 
 export interface StudentResponse extends Omit<DefaultResponse, "data"> {
   data: {
@@ -121,6 +127,12 @@ export interface AdminResponse extends Omit<DefaultResponse, "data"> {
   data: {
     auth: boolean;
     data: Admin;
+  };
+}
+export interface YearResponse extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    data: Year;
   };
 }
 export interface ValidatePasswordResponse

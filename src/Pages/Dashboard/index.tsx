@@ -8,6 +8,8 @@ import {
   StudentResponse,
   Supervisor,
   SupervisorResponse,
+  Year,
+  YearResponse,
 } from "../../lib/ResponseTypes";
 import Container from "../Container";
 import Navbar from "../Navbar";
@@ -26,10 +28,14 @@ import {
   Th,
   Text,
   Button,
+  Input,
+  Stack,
+  useToast,
 } from "@chakra-ui/react";
 import MegaLoader from "../MegaLoader";
 export default function Dashboard() {
   const navigate = useNavigate();
+  const addToast = useToast();
   const [students, setStudents] = useState<Student[]>([]);
   const [supervisors, setSupervisors] = useState<Supervisor[]>([]);
 
@@ -70,6 +76,7 @@ export default function Dashboard() {
         setSupervisorsLoading(false);
       });
   }, []);
+
   return (
     <>
       <br />
@@ -78,6 +85,7 @@ export default function Dashboard() {
         <MegaLoader />
       ) : (
         <>
+          <br />
           <Text fontSize="xl">Students</Text>
           <br />
           {students.length > 0 ? (
