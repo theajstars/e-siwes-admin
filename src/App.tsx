@@ -11,6 +11,7 @@ import Notification from "./Pages/Notification";
 import SingleSupervisor from "./Pages/SingleSupervisor";
 import SingleStudent from "./Pages/SingleStudent";
 import Reset from "./Pages/Reset";
+import Archives from "./Pages/Archives";
 
 function validateEmail(email: string) {
   const re =
@@ -43,7 +44,10 @@ const Banks = [
   { id: "23", name: "Zenith Bank", code: "057" },
 ];
 const getStudentBankName = (bankID: string) => {
-  return Banks.filter((b) => b.id === bankID)[0].name;
+  if (bankID.length !== 0) {
+    return Banks.filter((b) => b.id === bankID)[0].name;
+  }
+  return "";
 };
 type CourseSlugs =
   | "cyber_security"
@@ -92,6 +96,7 @@ function App() {
           <Route path="/home/students" element={<Students />} />
           <Route path="/home/students/:studentID" element={<SingleStudent />} />
           <Route path="/home/profile" element={<Profile />} />
+          <Route path="/home/archives" element={<Archives />} />
           <Route path="/home/notification" element={<Notification />} />
         </Route>
       </Routes>

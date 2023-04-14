@@ -19,5 +19,6 @@ enum Endpoints {
   SendResetToken = "/reset/generate",
   VerifyResetToken = "/reset/verify",
   TerminateSiwesYear = "/admin/year/terminate",
+  GetPastArchives = "/archives/get",
 }
 export { Endpoints };

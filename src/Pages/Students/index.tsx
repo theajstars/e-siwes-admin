@@ -125,7 +125,6 @@ export default function Students() {
               Phone: singleStudentObject.phone,
               Supervisor: getSupervisor(singleStudentObject.supervisor),
             };
-            // setExportData((prevData) => [...prevData, obj]);
             return obj;
           });
           console.log("Data to Export: ", exportDatum);

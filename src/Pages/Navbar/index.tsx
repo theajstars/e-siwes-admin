@@ -80,6 +80,14 @@ export default function Navbar() {
               Supervisors
             </Link>
             <Link
+              to="/home/archives"
+              className={`nav-item ${
+                activeItem === "Archives" ? "nav-item-active" : ""
+              }`}
+            >
+              Archives
+            </Link>
+            <Link
               to="/home/profile"
               className={`nav-item ${
                 activeItem === "Profile" ? "nav-item-active" : ""

@@ -21,6 +21,7 @@ import Cookies from "js-cookie";
 import Notification from "../Notification";
 import SingleSupervisor from "../SingleSupervisor";
 import SingleStudent from "../SingleStudent";
+import Archives from "../Archives";
 export default function Home() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -54,6 +55,7 @@ export default function Home() {
             <Route path="/students" element={<Students />} />
             <Route path="/students/:studentID" element={<SingleStudent />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/archives" element={<Archives />} />
             <Route path="/notification" element={<Notification />} />
           </Route>
         </Routes>

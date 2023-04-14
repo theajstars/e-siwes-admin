@@ -132,7 +132,13 @@ export interface AdminResponse extends Omit<DefaultResponse, "data"> {
 export interface YearResponse extends Omit<DefaultResponse, "data"> {
   data: {
     auth: boolean;
-    data: Year;
+    data: { year: Year; students: Student[] };
+  };
+}
+export interface ArchiveResponse extends Omit<DefaultResponse, "data"> {
+  data: {
+    auth: boolean;
+    data: Year[];
   };
 }
 export interface ValidatePasswordResponse
