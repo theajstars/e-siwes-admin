@@ -73,7 +73,7 @@ export default function Archives() {
     console.log(fetchYear);
     if (fetchYear.data.auth) {
       const { students } = fetchYear.data.data;
-      const exportData = await students.map((singleStudent) => {
+      const exportData = students.map((singleStudent) => {
         let obj = {
           AttatchmentPeriod: singleStudent.attachmentPeriod,
           BankName: getStudentBankName(singleStudent.bankAccount.name),
@@ -104,7 +104,6 @@ export default function Archives() {
           filename={`SIWES Year ${year}`}
         />
       );
-      window.open(downloadElement);
     }
   };
   useEffect(() => {
@@ -169,12 +168,26 @@ export default function Archives() {
                     fontSize="16px"
                     color="linkedin.400"
                     cursor="pointer"
-                    onClick={() => {
+                    onClick={(e) => {
                       GetArchive(archiveItem.year);
+                      setTimeout(() => {
+                        document
+                          .getElementById(`download${archiveItem.year}`)
+                          ?.click();
+                      }, 1500);
                     }}
                   >
                     Download
                   </Text>
+                  <CSVLink
+                    id={`download${archiveItem.year}`}
+                    data={exportData}
+                    headers={DataHeaders}
+                    filename={`SIWES Year ${archiveItem.year}`}
+                    onClick={() => {
+                      return true;
+                    }}
+                  ></CSVLink>
                 </Box>
               );
             })}
