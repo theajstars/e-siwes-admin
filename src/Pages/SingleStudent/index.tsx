@@ -200,7 +200,7 @@ export default function SingleStudent() {
                           <Tr>
                             <Td>
                               {isLengthPlusOne(student.bankAccount.name) ? (
-                                getStudentBankName(student.bankAccount.name)
+                                student.bankAccount.name
                               ) : (
                                 <i>undefined</i>
                               )}

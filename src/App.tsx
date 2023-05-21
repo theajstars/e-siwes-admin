@@ -44,10 +44,11 @@ const Banks = [
   { id: "23", name: "Zenith Bank", code: "057" },
 ];
 const getStudentBankName = (bankID: string) => {
-  if (bankID.length !== 0) {
-    return Banks.filter((b) => b.id === bankID)[0].name;
+  if (!bankID) {
+    return "";
   }
-  return "";
+  const f = Banks.filter((b) => b.id === bankID);
+  return f.length === 0 ? "" : f[0].name;
 };
 type CourseSlugs =
   | "cyber_security"

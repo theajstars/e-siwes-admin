@@ -536,7 +536,8 @@ export default function Students() {
                       {viewBankDetails && (
                         <>
                           <Td>
-                            {getStudentBankName(student.bankAccount.name)}
+                            {student.bankAccount.name}
+                            {/* {getStudentBankName(student.bankAccount.name)} */}
                           </Td>
                           <Td>{student.bankAccount.number}</Td>
                           <Td>{student.bankAccount.sortCode}</Td>

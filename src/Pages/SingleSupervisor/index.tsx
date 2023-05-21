@@ -181,6 +181,24 @@ export default function SingleSupervisor() {
       fetchSupervisorStudents();
     }
   };
+
+  const DeleteSupervisor = async (supervisorID: string) => {
+    const deleteSupervisor: DefaultResponse = await FetchData({
+      type: "POST",
+      route: Endpoints.DeleteSupervisor,
+      data: { supervisorID: supervisorID },
+    });
+
+    if (deleteSupervisor.data.auth) {
+      addToast({
+        title: "Success!",
+        description: "Supervisoru Deleted",
+        status: "success",
+      });
+      fetchAllStudents();
+      navigate("/home/supervisors");
+    }
+  };
   return (
     <>
       <div>
@@ -224,6 +242,20 @@ export default function SingleSupervisor() {
                         <i>Undefined</i>
                       </Text>
                     )}
+                  </Box>
+                  <Box>
+                    <Heading size="xs" textTransform="uppercase">
+                      Delete
+                    </Heading>
+                    <Button
+                      marginTop={2}
+                      colorScheme="red"
+                      onClick={() => {
+                        DeleteSupervisor(supervisor.id);
+                      }}
+                    >
+                      Delete Supervisor
+                    </Button>
                   </Box>
                 </Stack>
               </CardBody>

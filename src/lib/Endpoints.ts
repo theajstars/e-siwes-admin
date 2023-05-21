@@ -20,5 +20,7 @@ enum Endpoints {
   VerifyResetToken = "/reset/verify",
   TerminateSiwesYear = "/admin/year/terminate",
   GetPastArchives = "/archives/get",
+
+  DeleteSupervisor = "/supervisor/delete",
 }
 export { Endpoints };
