@@ -192,7 +192,7 @@ export default function SingleSupervisor() {
     if (deleteSupervisor.data.auth) {
       addToast({
         title: "Success!",
-        description: "Supervisoru Deleted",
+        description: "Supervisor Deleted",
         status: "success",
       });
       fetchAllStudents();
