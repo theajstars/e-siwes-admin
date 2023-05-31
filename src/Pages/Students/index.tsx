@@ -212,6 +212,15 @@ export default function Students() {
           if (response.data.auth) {
             const token = response.data.data;
             setStudentToken(token);
+            addToast({
+              description: "Token sent to student email",
+              status: "success",
+            });
+          } else {
+            addToast({
+              description: response.data.message,
+              status: "info",
+            });
           }
           setStudentTokenGenerating(false);
         })
@@ -471,6 +480,7 @@ export default function Students() {
                   <Th>First Name</Th>
                   <Th>Last Name</Th>
                   <Th>Email</Th>
+                  <Th>Activation Status</Th>
                   <Th>Phone Number</Th>
                   <Th>Payment Status</Th>
                   <Th>Supervisor</Th>
@@ -504,6 +514,23 @@ export default function Students() {
                       <Td>{student.firstName}</Td>
                       <Td>{student.lastName}</Td>
                       <Td>{student.email}</Td>
+                      <Td>
+                        <Text
+                          color={student.isAuthenticated ? "blue.500" : "red"}
+                        >
+                          {student.isAuthenticated ? (
+                            <>
+                              Activated &nbsp;
+                              <i className="far fa-check" />
+                            </>
+                          ) : (
+                            <>
+                              Not Activated &nbsp;
+                              <i className="far fa-times" />
+                            </>
+                          )}
+                        </Text>
+                      </Td>
                       <Td>{student.phone}</Td>
 
                       <Td color={student.hasPaid ? "blue.600" : "red.500"}>

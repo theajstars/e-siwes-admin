@@ -58,6 +58,7 @@ export interface Student {
     address: string;
   };
   isProfileComplete: boolean;
+  isAuthenticated: boolean;
   hasPaid: boolean;
 }
 
