@@ -116,7 +116,7 @@ export default function Students() {
                 singleStudentObject.bankAccount.masterListNumber,
               CompanyName: singleStudentObject.company.name,
               CompanyAddress: singleStudentObject.company.address,
-              courseOfStudy: getCourseName(singleStudentObject.courseOfStudy),
+              courseOfStudy: singleStudentObject.courseOfStudy,
               Email: singleStudentObject.email,
               FirstName: singleStudentObject.firstName,
               PaymentStatus: singleStudentObject.hasPaid ? "Paid" : "Not Paid",

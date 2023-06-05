@@ -122,10 +122,18 @@ export default function SingleStudent() {
                     </Heading>
                     <Text pt="2" fontSize="sm">
                       {isLengthPlusOne(student.courseOfStudy) ? (
-                        getCourseName(student.courseOfStudy)
+                        student.courseOfStudy
                       ) : (
                         <i>undefined</i>
                       )}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs" textTransform="uppercase">
+                      College
+                    </Heading>
+                    <Text pt="2" fontSize="sm">
+                      {student.college}
                     </Text>
                   </Box>
                   <Box>
