@@ -1,6 +1,7 @@
 {
   "name": "e-siwes-frontend",
   "version": "0.1.0",
+  "homepage": "https://admin.mcphersonsiwes.com.ng",
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.5.2",
